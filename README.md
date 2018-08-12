@@ -29,4 +29,15 @@ Kubernetes adds complexity, so it's not for everyone. Before using it, make sure
 * [Kubernetes Dashboard](dashboard.md)
 * [Persistent internal storage](storage.md)
 
+## TODO
 
+This repo is still a WIP and hasn't been used in production yet. More content coming.
+
+TODO:
+
+* Scripts to automate most of the work (eg host deployment)
+* Deploying game servers
+* Deploying a LAN cache server
+* Documenting caveats
+* Testing in production
+* Much else...
