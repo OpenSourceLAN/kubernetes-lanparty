@@ -1,0 +1,104 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kube-dhcp-cfg
+  namespace: kube-system
+  labels:
+    tier: node
+    app: dhcp
+data:
+  # We require `br0` interface to be already created before bootstrapping
+  # the kubernetes cluster.
+  bridge.conf: |
+    {
+      "name": "bridgenet",
+      "type": "bridge",
+      "bridge": "br0",
+      "ipMasq": false,
+      "isDefaultGateway": false,
+      "hairpinMode": false,
+      "ipam": {
+        "type": "dhcp" 
+      }
+    }
+
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kube-dhcp-daemon
+  namespace: kube-system
+  labels:
+    tier: node
+    app: dhcp
+spec:
+  template:
+    metadata:
+      labels:
+        tier: node
+        app: dhcp
+    spec:
+      # Need to be hostNetwork: true for socket files to work
+      hostNetwork: true
+      # Need to be hostPID: true so that dhcp process can access all of the netns entries in /proc
+      # for all of the containers being spun up (otherwise dhcp would only see itslef in /proc)
+      hostPID: true
+      nodeSelector:
+        beta.kubernetes.io/arch: amd64
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      initContainers:
+      - name: install-cni
+        # This image can be any image with `cp` binary available
+        image: busybox
+        # Set up the bridge CNI config file on the host. Pre-requisite is that a br0 bridge interface
+        # was set up and bridged to the LAN
+        command:
+        - cp
+        args:
+        - -f
+        - /cfg/bridge.conf
+        - /etc/cni/net.d/10-bridge.conf
+        volumeMounts:
+        - name: cni
+          mountPath: /etc/cni/net.d
+        - name: dhcp-cfg
+          mountPath: /cfg
+      containers:
+      - name: kube-dhcp
+        # This can be any image with /bin/sh, rm, and the CGO_ENABLED=1 compiled
+        # dhcp daemon at /dhcp. Busybox is a perfectly fine base tiny image.
+        image: opensourcelan/dhcp-cni-plugin:latest
+        command:
+        - /bin/sh
+        args:
+        - -c
+        # Gotta rm the sock file first; this daemon doesn't clean up its own and
+        # it crashes if it already exists
+        - 'rm -f /run/cni/dhcp.sock; exec /dhcp daemon'
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "50Mi"
+          limits:
+            cpu: "100m"
+            memory: "50Mi"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: run
+          mountPath: /run
+      volumes:
+        - name: run
+          hostPath:
+            path: /run
+        - name: cni
+          hostPath:
+            path: /etc/cni/net.d
+        - name: dhcp-cfg
+          configMap:
+            name: kube-dhcp-cfg
+
+
