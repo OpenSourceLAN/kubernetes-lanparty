@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: dns-server-redirector
+  namespace: kube-system
+  labels:
+    tier: node
+    app: dns-server-redirector
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        tier: node
+        app: dns-server-redirector
+    spec:
+      # Need to be hostNetwork: true to expose DNS on predictable LAN IP (ie the master's IP address)
+      hostNetwork: true
+      nodeSelector:
+        beta.kubernetes.io/arch: amd64
+        node-role.kubernetes.io/master: ""
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: dns-server-director
+        image: andyshinn/dnsmasq
+        args:
+        # effectively disables forwarding of queries
+        - -R
+        # Except forward this specific domain to this server
+        - -S
+        - /server.lan/10.96.0.10
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "50Mi"
+          limits:
+            cpu: "100m"
+            memory: "50Mi"
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+
+
