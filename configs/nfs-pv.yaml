@@ -1,0 +1,32 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: nfs-class
+provisioner: kubernetes.io/fake-nfs
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs
+spec:
+  storageClassName: nfs-class
+  capacity:
+    storage: 10000Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 10.0.0.163
+    path: "/games/tron"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-class
+  resources:
+    requests:
+      storage: 10Gi
+
