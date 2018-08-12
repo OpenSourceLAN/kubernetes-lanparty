@@ -18,5 +18,15 @@ Kubernetes adds complexity, so it's not for everyone. Before using it, make sure
 
 * Documentation
 * Scripts
-* Example configuration files
+* [Example configuration files](configs/)
+
+## Documentation Index
+
+* [Host Installation](installation.md)
+* [Host and pod network configuration](network.md)
+* [DNS](DNS.md)
+* [Internal Docker registry](registry.md)
+* [Kubernetes Dashboard](dashboard.md)
+* [Persistent internal storage](storage.md)
+
 
