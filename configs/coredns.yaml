@@ -4,7 +4,10 @@ data:
     .:53 {
         errors
         health
-        rewrite name substring server.lan default.svc.cluster.local
+        rewrite stop {
+          name regex (.*)\.server\.lan {1}.default.svc.cluster.local
+          answer name (.*)\.default\.svc\.cluster\.local {1}.server.lan
+        }
         kubernetes cluster.local in-addr.arpa ip6.arpa {
            pods insecure
            upstream
