@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "armagetron.fullname" . }}
+  labels:
+    app: {{ template "armagetron.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "armagetron.fullname" . }}
+    spec:
+      containers:
+      - name: armagetron
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: SERVER_NAME
+          value: {{ .Values.armagetron.name | quote }}
+        {{- if .Values.armagetron.rcon_password }}
+        - name: RCON_PASSWORD
+          value: {{ .Values.armagetron.rcon_password | quote }}
+        {{- end }}
+
+        ports:
+        - name: armagetron
+          containerPort: 4534
+          protocol: UDP
+      

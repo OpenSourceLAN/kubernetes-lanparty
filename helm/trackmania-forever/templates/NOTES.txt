@@ -1,0 +1,12 @@
+
+Trackmania Nations Forever
+
+Starts a tron server with FFA mode on port 34197
+
+Find it in your LAN browser with name {{ .Values.server.name }}
+
+{{- if .Values.server.rconPassword }}
+Because you provided an RCON password, you can find a web interface
+available on port 80 on the server's IP address. Use this (with the
+provided SuperAdmin RCON password) to change maps, kick players etc.
+{{- end }}

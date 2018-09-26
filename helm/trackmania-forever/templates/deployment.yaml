@@ -1,0 +1,59 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "armagetron.fullname" . }}
+  labels:
+    app: {{ template "armagetron.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "armagetron.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "armagetron.fullname" . }}
+    spec:
+      containers:
+      - name: tmnf
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        tty: true
+        stdin: true
+        env:
+        - name: "SERVER_NAME"
+          value: {{ .Values.server.name | quote }}
+        - name: TRACKLIST
+          value: {{ .Values.server.tracklist | quote }}
+        {{ if .Values.server.rconPassword }}
+        - name: "RCON_PASSWORD"
+          value: {{ .Values.server.rconPassword | quote }}
+        {{ end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+{{ if .Values.server.rconPassword }}
+      - name: rcon
+        image: "{{ .Values.imagePrefix}}{{ .Values.imageRcon }}:{{ .Values.imageRconTag }}"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 10Mi 
+{{- end }} 
+
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: trackmania-forever
+# spec:
+#   selector:
+#     app: trackmania-forever
+#   clusterIP: None
+#   ports:
+#   - name: foo # Actually, no port is needed.
+#     port: 1234
+#     targetPort: 1234
+# ---

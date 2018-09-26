@@ -1,0 +1,15 @@
+image: trackmania-forever
+imageTag: "latest"
+imageRcon: trackmania-forever-rcon
+imageRconTag: "latest"
+imagePrefix: squid:5000/
+
+resources:
+  requests:
+    memory: 50Mi
+    cpu: 100m
+
+server:
+  name: Kickass TMNF Server
+  tracklist: tracklist-all.cfg
+  rconPassword: null

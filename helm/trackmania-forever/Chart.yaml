@@ -1,0 +1,14 @@
+name: trackmania-forever
+version: 0.0.1
+appVersion: 2011.02.21
+description: TMNF 
+keywords:
+- game
+- server
+- trackmania forever
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master/trackmania-forever
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

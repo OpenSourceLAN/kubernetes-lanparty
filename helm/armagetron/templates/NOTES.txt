@@ -1,0 +1,8 @@
+
+Armagetron!
+
+Starts a tron server with FFA mode on port 34197
+
+Find it in your LAN browser with name {{ .Values.armagetron.name }}
+
+Note: currently /tron/server/var isn't externally mounted. This stores your server state for scores, logs, etc.

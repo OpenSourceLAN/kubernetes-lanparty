@@ -1,0 +1,13 @@
+image: armagetron
+imageTag: "20170930-161752"
+imagePrefix: squid:5000/
+
+resources:
+  requests:
+    memory: 50Mi
+    cpu: 100m
+
+armagetron:
+  name: Kickass Tron Server
+  port: 34197
+  rcon_password: null
