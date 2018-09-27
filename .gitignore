@@ -1,3 +1,6 @@
+*.pem
+*.crt
+*.srl
 
 # Created by https://www.gitignore.io/api/go,vim,code,sublimetext
 
