@@ -29,6 +29,10 @@ Kubernetes adds complexity, so it's not for everyone. Before using it, make sure
 * [Kubernetes Dashboard](dashboard.md)
 * [Persistent internal storage](storage.md)
 
+## Join the discord!
+
+[Join the Open Source LAN Discord!](https://discord.gg/0149LEvYPSzmnItKb). Chat with us about what you're doing with Kubernetes :)
+
 ## TODO
 
 This repo is still a WIP and hasn't been used in production yet. More content coming.
