@@ -35,4 +35,33 @@ $ dig +short  @10.96.0.10 tron.default.svc.cluster.local
 
 We can use the DNS rewriting config at the top of this file to then get `tron.server.lan` or similar as a nice human friendly name.
 
+### Integrating the DNS with your LAN DNS
+
+Now that your Kubernetes masters are running a DNS server that responds to friendly names, it needs to be queryable from your LAN.
+
+Using BIND, you can add to your `named.conf.local` file:
+
+```
+zone "server.lan" {
+   type forward;
+   forward only;
+   forwarders { 10.0.0.163; };
+};
+```
+
+Replacing, of course, `10.0.0.163` with the IP address of your master(s). 
+
+```
+service bind9 reload # or equivalent
+```
+
+```
+$ host -t A  byoc.server.lan
+byoc.server.lan has address 10.0.0.166
+byoc.server.lan has address 10.0.0.172
+```
+
+Winning!
+
+Other DNS servers will have a similar zone forwarding functionality. PfSense, for example, has "Services -> DNS Forwarder".
 
