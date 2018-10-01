@@ -59,17 +59,18 @@ But my version doesn't. So set the env var and test it works:
 
 ```
 export HELM_HOME=$(helm home)
-helm ls --tls
+export HELM_TLS_ENABLE=true
+helm ls
 ```
 
-Success. Now the client is set up!
+Success. Maybe put those in your `.bash_profile`? Now the client is set up!
 
 ## Run a server
 
 Set up a Trackmania server with a provided name. Starting from this directory:
 
 ```
-helm install --tls --name trackmania-demo --set server.name="Some Trackmania Server" ./trackmania-forever
+helm install --name trackmania-demo --set server.name="Some Trackmania Server" ./trackmania-forever
 ```
 
 This creates a deployment called `trackmania-demo` and passes a value to the 
@@ -78,7 +79,7 @@ This creates a deployment called `trackmania-demo` and passes a value to the
 To see the status of your deployments:
 
 ```
-helm ls --tls
+helm ls
 ```
 
 Done!
