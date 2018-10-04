@@ -1,0 +1,16 @@
+name: ut2004
+version: 0.0.1
+appVersion: 3339
+description: Unreal Tournament 2004 Dedicated Server
+keywords:
+- game
+- server
+- Unreal
+- Tournament
+- ut2004
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master/ut2004
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

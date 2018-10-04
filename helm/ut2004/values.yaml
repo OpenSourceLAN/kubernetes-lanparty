@@ -1,0 +1,19 @@
+image: ut2004
+imageTag: "20181004-220119"
+imagePrefix: squid:5000/
+
+resources:
+  requests:
+    memory: 200Mi
+    cpu: 500m
+
+server:
+  name: Kickass UT2004 Server
+  rcon_password: null
+  game_password: null
+  instagib: false
+  map: "DM-Deck17"
+  maxplayers: 32
+  lan: true
+  other_opts: null
+  mutators: null
