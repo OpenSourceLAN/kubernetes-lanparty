@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "server.fullname" . }}
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}
+    spec:
+      containers:
+      - name: server
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        tty: true
+        stdin: true
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: SV_HOSTNAME
+          value: {{ .Values.server.name | quote }}
+        - name: MAP
+          value: {{ .Values.server.default_map | quote }}
+        - name: MAPCYCLEFILE
+          value: map_cycle_file
+        {{- if .Values.server.rcon_password }}
+        - name: RCON_PASSWORD
+          value: {{ .Values.server.rcon_password | quote }}
+        {{- end }}
+        - name: SV_DOWNLOADURL
+          value: auto
+      - name: web
+        image: "{{ .Values.imagePrefix}}{{ .Values.webImage }}:{{ .Values.webImageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        
+        ports:
+        - name: server
+          containerPort: 27015
+          protocol: UDP
+        - name: rcon
+          containerPort: 27015
+          protocol: TCP
+      

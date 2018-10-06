@@ -1,0 +1,18 @@
+image: tf2-prophunt
+imageTag: "20181006-104423"
+webImage: tf2-prophunt-web
+webImageTag: "20181006-102327"
+imagePrefix: squid:5000/
+
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 500m
+
+server:
+  name: My Cool Team Fortress Prop Hunt Server
+  description: Team Fortress 2 Prop Hunt server
+  rcon_password: null
+  map_cycle_file: "ph-maplist.txt"
+  maxplayers: 32
+  default_map: "arena_storm_b1c"

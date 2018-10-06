@@ -1,0 +1,8 @@
+
+TF2 Prop hunt!
+
+This spins up both the Prop Hunt game server and a web server to mirror the maps.
+
+The `sv_downloadurl` is auto configured. (hooray!)
+
+At time of writing, hats aren't removed from props... so have fun with that :)
