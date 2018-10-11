@@ -1,0 +1,16 @@
+name: unreal4
+version: 0.0.1
+appVersion: 3525360
+description: Unreal Tournament 4 Dedicated Server
+keywords:
+- game
+- server
+- Unreal
+- Tournament
+- 4
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master/unreal4
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

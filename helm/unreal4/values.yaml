@@ -1,0 +1,15 @@
+image: unreal4
+imageTag: "20181011-231118"
+imagePrefix: squid:5000/
+
+resources:
+  requests:
+    memory: 800Mi
+    cpu: 1
+
+server:
+  name: Kickass Unreal4 Server
+  rcon_password: null
+  game_password: null
+  map: "DM-Spacer"
+  maxplayers: 32

@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "unreal4.fullname" . }}
+  labels:
+    app: {{ template "unreal4.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "unreal4.fullname" . }}
+    spec:
+      containers:
+      - name: unreal4
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: SV_HOSTNAME
+          value: {{ .Values.server.name | quote }}
+        {{- if .Values.server.rcon_password }}
+        - name: RCON_PASSWORD
+          value: {{ .Values.server.rcon_password | quote }}
+        {{- end }}
+        {{- if .Values.server.game_password }}
+        - name: SV_PASSWORD
+          value: {{ .Values.server.game_password | quote }}
+        {{- end }}
+        - name: MAP
+          value: {{ .Values.server.map | quote }}
+        - name: MAXPLAYERS
+          value: {{ .Values.server.maxplayers | quote }}
+        ports:
+        - name: unreal4
+          containerPort: 7779
+          protocol: UDP
+      
