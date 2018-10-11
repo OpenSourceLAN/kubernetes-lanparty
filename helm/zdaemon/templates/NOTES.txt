@@ -1,0 +1,4 @@
+
+ZDaemon!
+
+Find your server in your LAN browser with name {{ .Values.server.name }}

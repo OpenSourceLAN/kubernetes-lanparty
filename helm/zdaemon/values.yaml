@@ -1,0 +1,21 @@
+image: zdaemon
+imageTag: "20181009-234733"
+imagePrefix: squid:5000/
+
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 100m
+
+server:
+  name: Kickass ZDaemon Server
+  motd: Welcome to ZDaemon
+  rcon_password: null
+  game_password: null
+  maps:
+  - map01
+  - map04
+  - map07
+  maxplayers: 32
+  lan: true
+  
