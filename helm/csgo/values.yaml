@@ -1,0 +1,18 @@
+image: csgo
+imageTag: "latest"
+imagePrefix: minipete:5000/
+
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 500m
+
+server:
+  name: Vanilla CSGO Server
+  description: Vanilla CSGO Server
+  rcon_password: null
+  default_map: de_overpass
+  lan: 1
+  # If left blank a password will be generated for you
+  rconPassword: 
+

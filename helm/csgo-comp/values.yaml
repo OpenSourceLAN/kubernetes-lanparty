@@ -1,0 +1,19 @@
+image: csgo-comp
+imageTag: "latest"
+imagePrefix: minipete:5000/
+
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 500m
+
+server:
+  name: CSGO Comp Server
+  description: CSGO Comp Server of Success
+  rcon_password: null
+  default_map: de_overpass
+  lan: 1
+  game_type: 0
+  game_mode: 1
+  # If left blank a password will be generated for you
+  rconPassword: 
