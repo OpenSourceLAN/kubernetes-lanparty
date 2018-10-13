@@ -1,0 +1,8 @@
+
+Half Life 2 Death Match Server.
+
+Server hostname is:
+    {{ .Values.server.name | quote }}
+
+Get the RCON password by running:
+  printf $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "server.fullname" . }} -o jsonpath="{.data.rcon_password}" | base64 --decode);echo

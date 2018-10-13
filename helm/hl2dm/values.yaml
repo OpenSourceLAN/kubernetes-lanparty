@@ -1,0 +1,17 @@
+image: hl2dm
+imageTag: "latest"
+imagePrefix: minipete:5000/
+
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 500m
+
+server:
+  name: HL2DM Server
+  description: HL2DM Server
+  rcon_password: null
+  maxplayers: 16
+  # If left blank a password will be generated for you
+  rconPassword: 
+
