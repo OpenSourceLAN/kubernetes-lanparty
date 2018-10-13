@@ -28,8 +28,6 @@ spec:
           value: {{ .Values.server.name | quote }}
         - name: MAP
           value: {{ .Values.server.default_map | quote }}
-        - name: MAPCYCLEFILE
-          value: map_cycle_file
         - name: RCON_PASSWORD
           valueFrom:
             secretKeyRef:
