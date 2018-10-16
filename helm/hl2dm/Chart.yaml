@@ -1,0 +1,14 @@
+name: hl2dm
+version: 0.0.1
+appVersion: 0.0.1
+description: Half Life 2 Death Match
+keywords:
+- game
+- server
+- hl2dm
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master/hl2dm
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

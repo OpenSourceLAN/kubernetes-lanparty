@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "server.fullname" . }}
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}
+    spec:
+      containers:
+      - name: server
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        tty: true
+        stdin: true
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: MAXPLAYERS
+          value: {{ .Values.server.maxplayers | quote }}
+        - name: SV_HOSTNAME
+          value: {{ .Values.server.name | quote }}
+        - name: RCON_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "server.fullname" . }}
+              key: rcon_password
+
+          
+        ports:
+        - name: server
+          containerPort: 27015
+          protocol: UDP
+        - name: rcon
+          containerPort: 27015
+          protocol: TCP
+      
