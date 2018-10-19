@@ -31,8 +31,17 @@ spec:
             secretKeyRef:
               name: {{ template "server.fullname" . }}
               key: rcon_password
-
-          
+        - name: MAP
+          value: {{ .Values.server.map | quote }}
+        - name: MAPCYCLE
+          value: |
+{{ join "\n" .Values.server.mapcycle | indent 12 }}
+        - name: WINLIMIT
+          value: {{ .Values.server.winlimit | quote }}
+        {{- if .Values.server.sv_password }}
+        - name: SV_PASSWORD
+          value: {{.Values.server.sv_password }}
+        {{- end }}
         ports:
         - name: server
           containerPort: 27015

@@ -1,6 +1,6 @@
 image: hl2dm
-imageTag: "latest"
-imagePrefix: minipete:5000/
+imageTag: "20181019-225951"
+imagePrefix: squid:5000/
 
 resources:
   requests:
@@ -10,8 +10,19 @@ resources:
 server:
   name: HL2DM Server
   description: HL2DM Server
-  rcon_password: null
   maxplayers: 16
+  mapcycle:
+  - dm_lockdown
+  - dm_overwatch
+  - dm_powerhouse
+  - dm_resistance
+  - dm_runoff
+  - dm_steamlab
+  - dm_underpass
+  winlimit: 100
+  map: dm_resistance
+  # If left blank, no password is set
+  sv_password:
   # If left blank a password will be generated for you
-  rconPassword: 
+  rcon_password:
 
