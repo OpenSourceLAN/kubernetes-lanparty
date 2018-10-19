@@ -34,6 +34,14 @@ spec:
           value: {{ .Values.server.map | quote }}
         - name: MAXPLAYERS
           value: {{ .Values.server.maxplayers | quote }}
+        {{- if .Values.server.timelimit }}
+        - name: TIMELIMIT
+          value: {{ .Values.server.timelimit | quote }}
+        {{- end }}
+        {{- if .Values.server.goalscore }}
+        - name: GOALSCORE
+          value: {{ .Values.server.goalscore | quote }}
+        {{- end }}
         ports:
         - name: unreal4
           containerPort: 7779

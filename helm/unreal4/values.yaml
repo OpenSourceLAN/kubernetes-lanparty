@@ -13,3 +13,5 @@ server:
   game_password: null
   map: "DM-Spacer"
   maxplayers: 32
+  goalscore: 50 # the score to get to win
+  timelimit: 10
