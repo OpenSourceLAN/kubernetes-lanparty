@@ -18,4 +18,6 @@ server:
   - map07
   maxplayers: 32
   lan: true
+  timelimit: 10
+  fraglimit: 50
   

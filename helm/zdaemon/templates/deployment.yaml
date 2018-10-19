@@ -42,6 +42,14 @@ spec:
         - name: "LAN"
           value: "1"
         {{- end }}
+        {{- if .Values.server.fraglimit }}
+        - name: "CVAR_fraglimit"
+          value: {{ .Values.server.fraglimit | quote }}
+        {{- end }}
+        {{- if .Values.server.timelimit }}
+        - name: "CVAR_timelimit"
+          value: {{ .Values.server.timelimit | quote }}
+        {{- end }}
         ports:
         - name: zdaemon
           # I don't actually know what port number this uses
