@@ -63,10 +63,8 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   ports:
-  - port: 80
-    name: web
-  - port: 443
-    name: sniproxy
+  - port: 1433
+    name: mssql
   clusterIP: None
   selector:
     app: {{ template "server.fullname" . }}
