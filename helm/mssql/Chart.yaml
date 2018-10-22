@@ -1,0 +1,12 @@
+name: mssql
+version: 0.0.1
+appVersion: 1.10.05
+description: MSSQL wrapper for our needs
+keywords:
+- mssql
+- sql server
+home: https://www.opensourcelan.com
+sources:
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

@@ -1,0 +1,15 @@
+image: mssql/server
+imageTag: "2017-latest"
+imagePrefix: "mcr.microsoft.com/"
+
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 1
+
+server:
+  storage:
+    # This path must exist on this host, or the PV won't be created
+    hostname: kubeworker3
+    path: /data/mssql-data
+  password: testpasswordhere

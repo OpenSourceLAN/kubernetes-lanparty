@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "server.fullname" . }}
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "server.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}
+    spec:
+      containers:
+      - name: server
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        ports:
+        - name: mssql
+          containerPort: 1433
+          protcol: TCP
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_SA_PASSWORD
+          value: {{ .Values.server.password | quote }}
+        volumeMounts:
+        - name: {{ template "server.fullname" . }}-cache
+          mountPath: /var/opt/mssql
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "server.fullname" . }}-cache
+      labels:
+        app: {{ template "server.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+      - ReadWriteMany
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: {{ template "server.fullname" . }}
+      volumeName:  {{ template "server.fullname" . }}-cache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  ports:
+  - port: 80
+    name: web
+  - port: 443
+    name: sniproxy
+  clusterIP: None
+  selector:
+    app: {{ template "server.fullname" . }}
