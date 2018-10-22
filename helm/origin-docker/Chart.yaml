@@ -1,0 +1,18 @@
+name: origin-docker
+version: 0.0.1
+appVersion: 1.10.05
+description: Cache server for your LAN
+keywords:
+- origin-docker
+- cache
+- lan cache
+- lancache
+- steam
+- origin
+- blizzard
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/origin-docker/
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

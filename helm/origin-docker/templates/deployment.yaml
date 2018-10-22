@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "server.fullname" . }}
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}
+    spec:
+      containers:
+      - name: cache
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: cache
+          mountPath: /cache
+      - name: sniproxy
+        image: "{{ .Values.imagePrefix}}{{ .Values.sniImage }}:{{ .Values.sniTag }}"
+        ports:
+        - name: https
+          containerPort: 443
+          protocol: TCP
+      volumes:
+      - name: cache
+        persistentVolumeClaim:
+          claimName: {{ template "server.fullname" . }}-cache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  ports:
+  - port: 80
+    name: web
+  - port: 443
+    name: sniproxy
+  clusterIP: None
+  selector:
+    app: {{ template "server.fullname" . }}
