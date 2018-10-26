@@ -1,8 +1,9 @@
 image: origin-docker
-imageTag: "latest"
+imageTag: "20181025-181206"
 sniImage: sniproxy
-sniTag: "latest"
-imagePrefix: squid:5000/
+sniTag: "20181023-143613"
+imagePrefix: "dockerreg.lanadmins.net/"
+imagePullSecret: dockerreglanadminsnet
 
 resources:
   requests:
@@ -11,5 +12,13 @@ resources:
 
 server:
   storage:
-    hostname: kubeworker3
+    hostname: cache
     path: /data/cache-data
+  tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "cache"
+    effect: "NoSchedule"
+  nodeSelector:
+    dedicated: "cache"
+
