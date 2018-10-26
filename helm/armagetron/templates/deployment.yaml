@@ -31,4 +31,16 @@ spec:
         - name: armagetron
           containerPort: 4534
           protocol: UDP
-      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tron
+spec:
+  selector:
+    app: {{ template "armagetron.fullname" . }}
+  clusterIP: None
+  ports:
+  - name: foo # These ports don't matter if you're not using SRV recrds, but I think you need one otherwise no A records are returned
+    port: 1234
+    targetPort: 1234
