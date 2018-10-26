@@ -1,0 +1,20 @@
+image: wreckfest
+imageTag: "20181027-003606"
+imagePrefix: dockerreg.lanadmins.net/
+
+resources:
+  requests:
+    memory: 200Mi
+    cpu: 500m
+
+server:
+  server_name: Wreckfest server
+  welcome_message: nil
+  game_password: null
+  max_players: 32
+  track: bigstadium_demolition_arena
+  gamemode: derby
+  laps: 3
+  time_limit: 20
+
+  

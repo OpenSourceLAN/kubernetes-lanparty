@@ -1,0 +1,14 @@
+name: wreckfest
+version: 0.0.1
+appVersion: 1.10.05
+description: Wreckfest server
+keywords:
+- game
+- server
+- wreckfest
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master/wreckfest
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

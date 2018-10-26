@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "server.fullname" . }}
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}
+    spec:
+      imagePullSecrets:
+      - name: dockerreglanadminsnet
+      containers:
+      - name: server
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        tty: true
+        stdin: true
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: SERVER_NAME
+          value: {{ .Values.server.server_name | quote }}
+        {{- if .Values.server.welcome_message }}
+        - name: WELCOME_MESSAGE
+          value: {{ .Values.server.welcome_message | quote }}
+        {{- end }}
+        {{- if .Values.server.game_password }}
+        - name: GAME_PASSWORD
+          value: {{ .Values.server.game_password | quote }}
+        {{- end }}
+        - name: MAX_PLAYERS
+          value: {{ .Values.server.max_players | quote }}
+        - name: TRACK
+          value: {{ join "," .Values.server.track | quote }}
+        - name: GAME_MODE
+          value: {{ .Values.server.gamemode | quote }}
+        - name: LAPS
+          value: {{ .Values.server.laps | quote }}
+        - name: TIME_LIMIT
+          value: {{ .Values.server.time_limit | quote }}
