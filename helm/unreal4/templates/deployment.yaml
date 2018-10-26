@@ -13,6 +13,8 @@ spec:
       labels:
         app: {{ template "unreal4.fullname" . }}
     spec:
+      imagePullSecrets:
+      - name: dockerreglanadminsnet
       containers:
       - name: unreal4
         image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
@@ -42,8 +44,31 @@ spec:
         - name: GOALSCORE
           value: {{ .Values.server.goalscore | quote }}
         {{- end }}
+        {{- if .Values.server.timelimit }}
+        - name: TIMELIMIT
+          value: {{ .Values.server.timelimit | quote }}
+        {{- end }}
+        {{- if .Values.server.goalscore }}
+        - name: GOALSCORE
+          value: {{ .Values.server.goalscore | quote }}
+        {{- end }}
         ports:
         - name: unreal4
           containerPort: 7779
           protocol: UDP
       
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: unreal1
+spec:
+  selector:
+    app: {{ template "unreal4.fullname" . }}
+  clusterIP: None
+  ports:
+  - name: foo # Actually, no port is needed.
+    port: 1234
+    targetPort: 123
+`
