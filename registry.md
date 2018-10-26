@@ -34,3 +34,43 @@ The image is now in the docker registry, and accessible by kubernetes.
 kubectl run armagetron-test-server --image=some.docker.registry:5000/armagetron:latest -t -i --rm
 
 ```
+
+## Securing the registry
+
+```
+docker run \
+  --entrypoint htpasswd \
+  registry:2 -Bbn testuser testpassword > .htpasswd
+```
+
+```
+docker run -d \
+  -p 5000:5000 \
+  --restart=always \
+  --name registry \
+  -v `pwd`/auth:/auth \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+  -v `pwd`/certs:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  registry:2
+```
+
+```
+kubectl create secret docker-registry secretnamehere --docker-username=someuser --docker-password=somepassword --docker-server='https://some.docker.registry'
+```
+
+```
+kubectl run -i -t hello-world --restart=Never --rm=true \
+  --image=dockerreg.lanadmins.net/lan-registration:latest \
+  --overrides='{ "apiVersion": "v1", "spec": { "imagePullSecrets": [{"name": "dockerreglanadminsnet"}] } }'
+```
+
+```
+curl --basic --user someuser:somepassword https://some-secure-reg.com/v2/_catalog
+curl --basic --user someuser:somepassword https://some-secure-reg.com/v2/someimage/tags/list
+```
+
+Make this secret default for all pods in a namespace using [this method](https://stackoverflow.com/a/40646132)
