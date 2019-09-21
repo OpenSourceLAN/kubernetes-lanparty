@@ -1,3 +1,6 @@
+# ignore the config files for a specific event
+event-*.yaml
+
 *.pem
 *.crt
 *.srl
