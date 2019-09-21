@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "unreal4.fullname" . }}
@@ -8,6 +8,9 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
+  selector:
+    matchLabels:
+      app: {{ template "unreal4.fullname" . }}
   template:
     metadata:
       labels:
@@ -71,4 +74,3 @@ spec:
   - name: foo # Actually, no port is needed.
     port: 1234
     targetPort: 123
-`

@@ -2,6 +2,9 @@
 *.crt
 *.srl
 
+# helm dependencies that are installed via `helm dep up`
+charts/*.tgz
+
 # Created by https://www.gitignore.io/api/go,vim,code,sublimetext
 
 ### Code ###

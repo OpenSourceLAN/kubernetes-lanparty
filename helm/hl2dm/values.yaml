@@ -1,6 +1,6 @@
 image: hl2dm
-imageTag: "20181019-225951"
-imagePrefix: squid:5000/
+imageTag: latest
+imagePrefix: dockerreg.lanadmins.net/
 
 resources:
   requests:

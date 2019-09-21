@@ -2,7 +2,7 @@ image: trackmania-forever
 imageTag: "latest"
 imageRcon: trackmania-forever-rcon
 imageRconTag: "latest"
-imagePrefix: squid:5000/
+imagePrefix: dockerreg.lanadmins.net/
 
 resources:
   requests:

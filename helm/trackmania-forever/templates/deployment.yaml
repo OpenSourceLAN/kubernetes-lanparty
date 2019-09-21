@@ -18,6 +18,8 @@ spec:
       labels:
         app: {{ template "armagetron.fullname" . }}
     spec:
+      imagePullSecrets:
+      - name: dockerreglanadminsnet
       containers:
       - name: tmnf
         image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"

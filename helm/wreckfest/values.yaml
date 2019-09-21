@@ -1,5 +1,5 @@
 image: wreckfest
-imageTag: "20181027-003606"
+imageTag: latest
 imagePrefix: dockerreg.lanadmins.net/
 
 resources:

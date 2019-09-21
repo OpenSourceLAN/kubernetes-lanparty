@@ -1,6 +1,6 @@
 image: unreal4
-imageTag: "20181011-231118"
-imagePrefix: squid:5000/
+imageTag: latest
+imagePrefix: dockerreg.lanadmins.net/
 
 resources:
   requests:

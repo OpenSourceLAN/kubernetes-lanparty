@@ -1,6 +1,6 @@
 image: armagetron
-imageTag: "20170930-161752"
-imagePrefix: squid:5000/
+imageTag: latest
+imagePrefix: dockerreg.lanadmins.net/
 
 resources:
   requests:
