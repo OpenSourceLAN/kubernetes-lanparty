@@ -11,6 +11,7 @@ data:
   # the kubernetes cluster.
   bridge.conf: |
     {
+      "cniVersion": "0.2.0",
       "name": "bridgenet",
       "type": "bridge",
       "bridge": "br0",
@@ -23,7 +24,7 @@ data:
     }
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: kube-dhcp-daemon
@@ -32,6 +33,10 @@ metadata:
     tier: node
     app: dhcp
 spec:
+  selector:
+    matchLabels:
+      app: dhcp
+      tier: node
   template:
     metadata:
       labels:
@@ -47,6 +52,9 @@ spec:
         beta.kubernetes.io/arch: amd64
       tolerations:
       - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      - key: node.kubernetes.io/not-ready
         operator: Exists
         effect: NoSchedule
       initContainers:
