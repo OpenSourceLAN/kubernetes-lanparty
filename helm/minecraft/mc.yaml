@@ -1,0 +1,111 @@
+---
+# Source: minecraft/templates/01storage.yaml
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: minecraft1-minecraft
+  labels:
+    app: minecraft1-minecraft
+    chart: "minecraft-0.0.1"
+    release: "minecraft1"
+    heritage: "Tiller"
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minecraft1-minecraft-worlddata
+  labels:
+    app: minecraft
+    chart: minecraft-0.0.1
+    release: minecraft1
+    heritage: Tiller
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  local:
+    path: /data/mcworlddata1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - "kubeworker8"
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: minecraft1-minecraft
+
+
+---
+# Source: minecraft/templates/02deployment.yaml
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minecraft1-minecraft-worlddata
+  labels:
+    app: minecraft1-minecraft
+    chart: "minecraft-0.0.1"
+    release: "minecraft1"
+    heritage: "Tiller"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: minecraft1-minecraft
+  volumeName:  minecraft1-minecraft-worlddata
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: minecraft1-minecraft
+  labels:
+    app: minecraft1-minecraft
+    chart: "minecraft-0.0.1"
+    release: "minecraft1"
+    heritage: "Tiller"
+spec:
+  template:
+    metadata:
+      labels:
+        app: minecraft1-minecraft
+    spec:
+      imagePullSecrets:
+      - name: dockerreglanadminsnet
+      containers:
+      - name: server
+        image: "dockerreg.lanadmins.net/bukkit:20181026-120432"
+        imagePullPolicy: Always
+        tty: true
+        stdin: true
+        resources:
+          requests:
+            cpu: 750m
+            memory: 1000Mi
+          
+        env:
+          - name: HOSTNAME
+            value: "PAX Server 1"
+        ports:
+        - name: server
+          containerPort: 25565
+          protocol: UDP
+        - name: server-udp
+          containerPort: 25565
+          protocol: TCP
+        volumeMounts:
+        - name: minecraft1-minecraft-worlddata
+          mountPath: /bukkit/plotworld/
+      volumes:
+        - name: minecraft1-minecraft-worlddata
+          persistentVolumeClaim:
+            claimName: minecraft1-minecraft-worlddata
+
+

@@ -1,0 +1,15 @@
+name: minecraft
+version: 0.0.1
+appVersion: 2011.02.21
+description: Minecraft 
+keywords:
+- game
+- server
+- minecraft
+- bukkit
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

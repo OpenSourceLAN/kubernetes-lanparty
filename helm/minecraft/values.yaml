@@ -1,0 +1,13 @@
+image: bukkit
+imageTag: "latest"
+imagePrefix: dockerreg.lanadmins.net/
+
+resources:
+  requests:
+    memory: 50Mi
+    cpu: 100m
+
+server:
+  enableStorage: false
+  name: Kickass Bukkit Server
+  rconPassword: null

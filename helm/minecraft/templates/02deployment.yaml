@@ -1,0 +1,67 @@
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "server.fullname" . }}-worlddata
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: {{ template "server.fullname" . }}
+  volumeName:  {{ template "server.fullname" . }}-worlddata
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "server.fullname" . }}
+  labels:
+    app: {{ template "server.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "server.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}
+    spec:
+      imagePullSecrets:
+      - name: dockerreglanadminsnet
+      containers:
+      - name: server
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        tty: true
+        stdin: true
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+          - name: HOSTNAME
+            value: {{ .Values.server.name | quote }}
+        ports:
+        - name: server
+          containerPort: 25565
+          protocol: UDP
+        - name: server-udp
+          containerPort: 25565
+          protocol: TCP
+{{ if .Values.server.enableStorage }}
+        volumeMounts:
+        - name: {{ template "server.fullname" . }}-worlddata
+          mountPath: /bukkit/plotworld/
+      volumes:
+        - name: {{ template "server.fullname" . }}-worlddata
+          persistentVolumeClaim:
+            claimName: {{ template "server.fullname" . }}-worlddata
+{{ end }}
