@@ -14,9 +14,9 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
-  storageClassName: {{ template "server.fullname" . }}
-  volumeName:  {{ template "server.fullname" . }}-worlddata
+      storage: 2Gi
+  storageClassName: glusterfs-storage
+#  volumeName:  {{ template "server.fullname" . }}-worlddata
 ---
 apiVersion: apps/v1
 kind: Deployment

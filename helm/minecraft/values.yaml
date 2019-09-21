@@ -8,6 +8,6 @@ resources:
     cpu: 100m
 
 server:
-  enableStorage: false
+  enableStorage: true
   name: Kickass Bukkit Server
   rconPassword: null
