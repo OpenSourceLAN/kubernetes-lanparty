@@ -88,6 +88,7 @@ Alternatively, if DHCP seems wrong for you, you can do host local static ranges 
 ```
 cat <<EOF > /etc/cni/net.d/10-bridge.conf
 {
+  "cniVersion": "0.2.0",
   "name": "bridgenet",
   "type": "bridge",
   "bridge": "br0",
@@ -95,13 +96,9 @@ cat <<EOF > /etc/cni/net.d/10-bridge.conf
   "isDefaultGateway": false,
   "hairpinMode": false,
   "ipam": {
-     "type": "host-local", "ranges": [[
-      { "subnet": "10.0.0.0/24", "rangeStart": "10.0.0.91", "rangeEnd": "10.0.0.99", "gateway": "10.0.0.1"},
-      { "subnet": "10.0.0.0/24", "rangeStart": "10.0.0.85", "rangeEnd": "10.0.0.89", "gateway": "10.0.0.1"}
-    ]
-    ],
-    "routes": [   {"dst": "0.0.0.0/0", "gw": "10.0.0.1"} ]
-
+    "type": "host-local", "ranges": [[{ "subnet": "10.0.0.0/24", "rangeStart": "10.0.0.40", "rangeEnd": "10.0.0.54", "gateway": "10.0.0.1"}]],
+    "routes": [{"dst": "0.0.0.0/0", "gw": "10.0.0.1"}],
+    "dataDir": "/run/ipam-state"  
   }
 }
 EOF
