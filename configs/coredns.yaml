@@ -1,25 +1,35 @@
+
+# WARNING:
+# Your coredns config may have changed.
+# You should take a backup of your coredns configmap before applying this
+# Or, just add the `rewrite stop {}` block to your own coredns configmap.
+# kubectl -n kube-system get configmap coredns > backup.yaml
+#
+# The below works with kube 1.16
+
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
 data:
   Corefile: |
     .:53 {
         errors
         health
+        ready
         rewrite stop {
           name regex (.*)\.server\.lan {1}.default.svc.cluster.local
           answer name (.*)\.default\.svc\.cluster\.local {1}.server.lan
         }
         kubernetes cluster.local in-addr.arpa ip6.arpa {
-           pods insecure
-           upstream
-           fallthrough in-addr.arpa ip6.arpa
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
         }
         prometheus :9153
-        proxy . /etc/resolv.conf
+        forward . /etc/resolv.conf
         cache 30
+        loop
         reload
+        loadbalance
     }
-kind: ConfigMap
-metadata:
-  name: coredns
-  namespace: kube-system
-
