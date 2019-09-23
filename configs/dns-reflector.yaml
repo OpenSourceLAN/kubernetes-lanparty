@@ -1,29 +1,19 @@
-apiVersion: extensions/v1beta1
-kind: DaemonSet
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: dns-server-redirector
   namespace: kube-system
   labels:
-    tier: node
     app: dns-server-redirector
 spec:
-  updateStrategy:
-    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: dns-server-redirector
   template:
     metadata:
       labels:
-        tier: node
         app: dns-server-redirector
     spec:
-      # Need to be hostNetwork: true to expose DNS on predictable LAN IP (ie the master's IP address)
-      hostNetwork: true
-      nodeSelector:
-        beta.kubernetes.io/arch: amd64
-        node-role.kubernetes.io/master: ""
-      tolerations:
-      - key: node-role.kubernetes.io/master
-        operator: Exists
-        effect: NoSchedule
       containers:
       - name: dns-server-director
         image: andyshinn/dnsmasq
@@ -43,5 +33,24 @@ spec:
         securityContext:
           capabilities:
             add: ["NET_ADMIN"]
-
-
+---
+# This service uses metallb
+# install: https://metallb.universe.tf/installation/
+# and then configure a `default` address pool https://metallb.universe.tf/configuration/
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    metallb.universe.tf/address-pool: default
+  name: test
+  namespace: kube-system
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 53
+    protocol: UDP
+    targetPort: 53
+  selector:
+    app: dns-server-redirector
+  sessionAffinity: None
+  type: LoadBalancer
