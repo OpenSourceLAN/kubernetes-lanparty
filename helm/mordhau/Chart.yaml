@@ -1,0 +1,14 @@
+name: mordhau
+version: 0.0.1
+appVersion: 3525360
+description: Mordhau Dedicated Server
+keywords:
+- game
+- server
+- mordhau
+home: https://www.opensourcelan.com
+sources:
+- https://github.com/OpenSourceLAN/gameservers-docker/tree/master/mordhau
+maintainers:
+- name: Chris Holman
+  email: chris@opensourcelan.com

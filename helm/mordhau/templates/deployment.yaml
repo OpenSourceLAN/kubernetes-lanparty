@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "mordhau.fullname" . }}
+  labels:
+    app: {{ template "mordhau.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "mordhau.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "mordhau.fullname" . }}
+    spec:
+      imagePullSecrets:
+      - name: dockerreglanadminsnet
+      containers:
+      - name: mordhau
+        image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
+        imagePullPolicy: Always
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: SV_HOSTNAME
+          value: {{ .Values.server.name | quote }}
+        {{- if .Values.server.rcon_password }}
+        - name: RCON_PASSWORD
+          value: {{ .Values.server.rcon_password | quote }}
+        {{- end }}
+        {{- if .Values.server.game_password }}
+        - name: SV_PASSWORD
+          value: {{ .Values.server.game_password | quote }}
+        {{- end }}
+        - name: MAXPLAYERS
+          value: {{ .Values.server.maxplayers | quote }}
+        - name: MAP
+          value: {{ .Values.server.map | quote }}
+        {{- if .Values.server.gamemode }}
+        - name: GAMEMODE
+          value: {{ .Values.server.gamemode | quote }}
+        {{- end }}
+        ports:
+        - name: mordhau
+          containerPort: 7779
+          protocol: UDP
+      
+#---
+#
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: 
+#spec:
+#  selector:
+#    app: {{ template "mordhau.fullname" . }}
+#  clusterIP: None
+#  ports:
+#  - name: foo # Actually, no port is needed.
+#    port: 1234
+#    targetPort: 123

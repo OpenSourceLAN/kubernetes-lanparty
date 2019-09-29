@@ -1,0 +1,16 @@
+image: mordhau
+imageTag: latest
+imagePrefix: dockerreg.lanadmins.net/
+
+resources:
+  requests:
+    memory: 800Mi
+    cpu: 1
+
+server:
+  name: Kickass Mordhau Server
+  rcon_password: null
+  game_password: null
+  maxplayers: 32
+  map: FFA_ThePit
+  #gamemode: SKM
