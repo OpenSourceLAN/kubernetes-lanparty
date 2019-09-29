@@ -1,6 +1,6 @@
 image: zdaemon
 imageTag: "20181009-234733"
-imagePrefix: squid:5000/
+imagePrefix: dockerreg.lanadmins.net/
 
 resources:
   requests:
