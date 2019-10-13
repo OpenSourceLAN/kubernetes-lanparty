@@ -1,0 +1,56 @@
+{
+  "clusters": [
+    {
+      "nodes": [
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "kubestorage1"
+              ],
+              "storage": [
+                "10.15.0.11"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sdb"          ]
+        },
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "kubestorage2"
+              ],
+              "storage": [
+                "10.15.0.12"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sdb"
+          ]
+        },
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "kubestorage3"
+              ],
+              "storage": [
+                "10.15.0.13"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sdb"
+          ]
+        }
+      ]
+    }
+  ]
+}
+
