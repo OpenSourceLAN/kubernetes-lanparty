@@ -1,6 +1,6 @@
 image: ut2004
 imageTag: "20181004-220119"
-imagePrefix: squid:5000/
+imagePrefix: dockerreg.lanadmins.net/
 
 resources:
   requests:

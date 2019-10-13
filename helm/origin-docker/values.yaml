@@ -3,7 +3,7 @@ imageTag: "20181025-181206"
 sniImage: sniproxy
 sniTag: "20181023-143613"
 imagePrefix: "dockerreg.lanadmins.net/"
-imagePullSecret: dockerreglanadminsnet
+imagePullSecret: dockerreg
 
 resources:
   requests:

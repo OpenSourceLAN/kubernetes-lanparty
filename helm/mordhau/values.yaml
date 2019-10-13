@@ -1,4 +1,4 @@
-image: mordhau
+image: mordhau-squid
 imageTag: latest
 imagePrefix: dockerreg.lanadmins.net/
 

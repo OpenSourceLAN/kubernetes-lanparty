@@ -17,6 +17,10 @@ spec:
       labels:
         app: {{ template "server.fullname" . }}
     spec:
+      tolerations:
+      - key: "role"
+        value: "storage"
+        effect: "NoSchedule"
       containers:
       - name: server
         image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"
