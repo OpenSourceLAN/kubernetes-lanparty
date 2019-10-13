@@ -1,0 +1,95 @@
+
+
+bugs in script:
+* search for extensions/v1alpha1 in kube-templates/* , replace with apps/v1, and also add a `selector` block
+* gk-deploy uses `--show-all`, which is removed from kubectl and is now default, so can be removed
+* the dynamic storage provisioner outputted at the end of the script has pod IP, no service IP
+  ... and also it should use the admin user, not the user user
+  ... and it uses plaintext user/pass for secrets, but should isntead use a secret reference
+
+set aside an empty block device on each of the storage hosts
+
+```
+cat <<EOF > /etc/modules-load.d/modules.conf
+dm_snapshot
+dm_mirror
+dm_thin_pool
+EOF
+modprobe dm_snapshot
+modprobe dm_mirror
+modprobe dm_thin_pool
+```
+
+either reboot or modprobe those
+
+```
+sudo apt-get install -y glusterfs-client #(to make mount.glusterfs available)
+```
+
+Make sure the target drives are empty:
+
+```
+# delete all partitions
+gdisk /dev/sdb
+d
+w
+# wipe the first 100MB of the drive to get rid of MFT etc
+dd if=/dev/zero of=/dev/sdb bs=1M count=100
+```
+
+set up the topology.json file
+
+./gk-deploy -g -t kube-templates/ --admin-key <somepassword> --user-key <anotherpassword> topology.json
+
+
+
+This is the storage class you need to apply - the one that the script gives you is wrong.
+Subsitute teh resturl IP for the service IP, not the pod ID
+Put the restuser admin in there
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: glusterfs-storage
+provisioner: kubernetes.io/glusterfs
+parameters:
+  resturl: "http://10.104.18.77:8080"
+  restuser: "admin"
+  restuserkey: ""
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: glusterfs-storage
+
+
+
+
+Replacing broken host:
+
+bring up host.
+
+Add the label `storagenode=glusterfs` to the node
+
+That will create a new glusterfs pod on the host
+
+Once that pod is ready, run `heketi-cli --user admin --secret <somepassword> node add --zone=1 --cluster=45b45db0764e976a5a5e3c9b7530a884 --management-host-name=kubeworker4 --storage-host-name=10.0.0.234`
+
+then update your topology.json file, and run `heketi-cli --user admin --secret <somepassword> topology load --json=topo.json` to have it init the device
+
+`heketi-cli --user admin --secret <somepassword> topology info` - get the Device ID of the disk on the host you want to remove
+
+`heketi-cli --user admin --secret <somepassword> device disable <deviceid>`
+`heketi-cli --user admin --secret <somepassword> device remove <deviceid>` - this step _should_ migrate all bricks to another host
