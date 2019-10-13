@@ -1,0 +1,31 @@
+docker run -d \
+  -p 443:5000 \
+  --restart=always \
+  --name registry\
+  -v /data/nvme/dockerreg/_data:/var/lib/registry \
+  -e "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/fullchain1.pem" \
+  -e "REGISTRY_HTTP_TLS_KEY=/certs/privkey1.pem" \
+  -v `pwd`/auth:/auth \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Nothing To See Here" \
+  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd \
+  -v `pwd`/certs:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/fullchain1.pem \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/privkey1.pem \
+  registry:2
+
+
+
+
+
+docker run --rm \
+  --entrypoint htpasswd \
+  registry:2 -Bbn pax password > htpasswd
+
+kubectl create secret docker-registry dockerreg --docker-username=pax --docker-password=password--docker-server='https://dockerreg.lanadmins.net
+
+
+kubectl patch serviceaccount default -p '{"imagePullSecrets": [{"name": "dockerreg"}]}'
+
+'
+
