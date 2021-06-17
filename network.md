@@ -29,23 +29,23 @@ When kubernetes runs a new pod, it first invokes the CNI plugins you've specifie
 So on every host (kubelets and masters), we configure a single bridge and CNI network that uses the bridge like this:
 
 ```
-cat <<EOF > /etc/network/interfaces
-source /etc/network/interfaces.d/*
-
-auto lo
-iface lo inet loopback
-
-auto eno1
-iface eno1 inet manual
-   post-up ifup --allow=hotplug br0
-
-allow-hotplug br0
-iface br0 inet dhcp
-  bridge_ports eno1
-  bridge_stp off
+cat <<EOF > /etc/netplan/10-bridge.conf
+network:
+  ethernets:
+    eno1:
+            dhcp4: false
+  bridges:
+          br0:
+                  interfaces: [eno1]
+                  # either dhcp4: true, or, a static address like below
+                  addresses: [ "10.0.200.1/16"]
+                  gateway4: "10.0.0.1"
+                  nameservers:
+                          addresses: [ 10.0.0.1 ]
+  version: 2
 EOF
 
-service networking restart
+netplan apply
 
 mkdir -p /etc/cni/net.d
 cat <<EOF> /etc/cni/net.d/10-bridge.conf 
