@@ -16,6 +16,14 @@ sysctl --load=/etc/sysctl.d/05-forwarding.conf
 
 curl -sSL  https://get.docker.io | sudo bash #yolo
 
+# containerd needs CRI enabled, which is disabled by default
+rm /etc/containerd/config.toml
+systemctl restart containerd
+
+# kubectl crashloops if swap is enabled... but kubeadm only gives a warning :(
+swapoff -a
+sed -i '/swap/d' /etc/fstab
+
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
