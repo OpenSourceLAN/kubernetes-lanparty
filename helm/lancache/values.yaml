@@ -1,0 +1,24 @@
+image: lancachenet/monolithic
+imageTag: latest
+
+resources:
+  requests:
+    memory: 4000Mi
+    cpu: 1
+
+server:
+  storage:
+    # node name that the storage is one
+    hostname: lancache
+    # directory on node that you want to store the logs/cache data on.
+    # directory should always exist
+    path: /data/lancache
+  tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "cache"
+    effect: "NoSchedule"
+  nodeSelector:
+    # kubectl label node lancache dedicated=lancache
+    dedicated: "lancache"
+
