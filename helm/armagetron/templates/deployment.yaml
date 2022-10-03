@@ -16,6 +16,8 @@ spec:
       labels:
         app: {{ template "armagetron.fullname" . }}
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: armagetron
         image: "{{ .Values.imagePrefix}}{{ .Values.image }}:{{ .Values.imageTag }}"

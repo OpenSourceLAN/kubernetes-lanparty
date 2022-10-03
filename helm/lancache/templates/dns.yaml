@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "server.fullname" . }}-dns
+  labels:
+    app: {{ template "server.fullname" . }}-dns
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+   matchLabels:
+     app: {{ template "server.fullname" . }}-dns
+  template:
+    metadata:
+      labels:
+        app: {{ template "server.fullname" . }}-dns
+    spec:
+      {{- if .Values.server.tolerations }}
+      tolerations:
+{{ toYaml .Values.server.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.server.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.server.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecret }}
+      {{- end }}
+      containers:
+      - name: dns
+        image: lancachenet/lancache-dns:latest
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        ports:
+        - name: dns
+          containerPort: 53
+          protocol: UDP
+        env:
+          - name: USE_GENERIC_CACHE
+            value: "true"
+          - name: LANCACHE_IP
+            value: 10.10.99.1
+
+              
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lancachedns
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  allocateLoadBalancerNodePorts: false
+  externalTrafficPolicy: Local
+  internalTrafficPolicy: Local
+  ports:
+  - port: 53
+    targetPort: 53
+    name: dns
+    protocol: UDP
+  selector:
+    app: {{ template "server.fullname" . }}-dns
+  type: LoadBalancer

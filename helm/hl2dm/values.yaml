@@ -1,6 +1,6 @@
 image: hl2dm
-imageTag: latest
-imagePrefix: dockerreg.lanadmins.net/
+imageTag: 20221003-065414
+imagePrefix: docker.pax.lan/
 
 resources:
   requests:

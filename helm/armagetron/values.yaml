@@ -1,6 +1,7 @@
 image: armagetron
 imageTag: latest
-imagePrefix: dockerreg.lanadmins.net/
+imagePrefix: docker.pax.lan/
+imagePullSecret: regcred
 
 resources:
   requests:

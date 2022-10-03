@@ -1,6 +1,6 @@
 image: wreckfest
 imageTag: latest
-imagePrefix: dockerreg.lanadmins.net/
+imagePrefix: docker.pax.lan/
 
 resources:
   requests:
