@@ -13,6 +13,10 @@ I'll be adding further compute nodes to the cluster later.
 This is based on the [official quickstart guide](https://rook.io/docs/rook/v1.6/ceph-quickstart.html),
 with notes on what to change to work for my situation.
 
+**If you have used these disks for a Ceph cluster previously, [follow this cleanup guide first](https://rook.io/docs/rook/v1.10/Storage-Configuration/ceph-teardown/#delete-the-data-on-hosts)**
+
+The cleanup guide can be roughly summarised as.... on every host in the kube cluster, `rm -rf /var/lib/rook`... and on every block device that has hosted Ceph data before, zero it entirely, either with `dd` or for SSDs `blkdiscard`.
+
 ```
 git clone https://github.com/rook/rook.git
 cd cluster/examples/kubernetes/ceph
@@ -39,7 +43,7 @@ Once the operator pod is running successfully, you can customise the `cluster.ya
 ```
 # spec.placement:
 #    all:
-#       tolerations: [{"key": "node-role.kubernetes.io/master", "effect": "NoSchedule", "operator": "Exists"}]
+#       tolerations: [{"key": "node-role.kubernetes.io/control-plane", "effect": "NoSchedule", "operator": "Exists"}]
 
 # storage.useAllNodes: false
 # storage.useAllDevices: false
@@ -59,12 +63,19 @@ You should eventually see multiple pods each of rook-ceph-mon, rook-ceph-mgr, an
 the osd-prepare pods are different. If the osd pods are not present, but the osd-prepare ones are, check the
 logs on the osd-prepare pods.
 
-When it is finished, the `ceph status` command via the toolbox should show 3 daemons, a mgr, and 3 osds. The
+When it is finished, the `ceph status` command via the toolbox (`kubectl apply -f toolbox.yaml`) should show 3 daemons, a mgr, and 3 osds. The
 available should show the size of your total block devices allocated.
 
 Ceph is now healthy.
 
-Blindly apply the storage class and ceph block pool resources from this repo:
+Create the `CephFilesystem` resource. Modify the `tolerations` as appropriate.
+
+```
+kubectl apply -f filesystem.yaml
+```
+
+
+Blindly apply the storage class. It depends on the filesystem and the cephcluster resources already provisioned.
 ```
 kubectl apply -f storage-ceph-storageclass.yaml
 ```
@@ -80,12 +91,12 @@ metadata:
   labels:
     app: wordpress
 spec:
-  storageClassName: rook-ceph-block
+  storageClassName: rook-cephfs
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 20Gi
+      storage: 1Gi
 EOF
 kubectl get pv
 # NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                    STORAGECLASS      REASON   AGE

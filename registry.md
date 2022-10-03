@@ -15,12 +15,25 @@ With the registry up and running, now we need to configure the docker service on
 ```
 cat <<EOF > /etc/docker/daemon.json
 {
-  "insecure-registries": [ "some.docker.registry:5000"]
+  "insecure-registries": [ "docker.pax.lan"]
 }
 EOF
 service docker restart
 ```
 Make sure to update the hostname accordingly. `some.docker.registry` should be an FQDN that resolves to your registry host.
+
+But that only impacts you if you're using `docker`... latest versions of Kube use `containerrd` interface, which needs to be configured seaprately:
+
+```
+cat <<EOF > /etc/containerd/config.toml
+version = 2
+
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker.pax.lan"]
+    endpoint = ["http://docker.pax.lan"]
+EOF
+
+```
 
 Now make an image. On your local desktop or whatever, tag and push an image:
 ```
